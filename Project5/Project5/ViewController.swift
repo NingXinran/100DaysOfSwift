@@ -16,9 +16,9 @@ class ViewController: UITableViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    print("Hello")
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
-    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "New", style: .done, target: self, action: #selector(startGame))
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "NewNew", style: .done, target: self, action: #selector(startGame))
 
     if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
       if let startWords = try? String(contentsOf: startWordsURL) {

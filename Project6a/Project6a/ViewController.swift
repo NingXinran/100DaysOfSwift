@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Project2
+//  Project6a
 //
 //  Created by Ning, Xinran on 18/5/23.
 //
@@ -20,11 +20,20 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "View Score", style: .done, target: self, action: #selector(showScore))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "View Score", style: .plain, target: self, action: #selector(showScore))
 
     // Set up countries array
     countries += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
+
     askQuestion()
+
+    button2.imageView?.contentMode = .scaleToFill
+    button2.layer.borderWidth = 1
+    button1.layer.borderWidth = 1
+    button3.layer.borderWidth = 1
+
+    view.setNeedsLayout()
+    view.layoutIfNeeded()
   }
 
   func askQuestion(action: UIAlertAction! = nil) {
