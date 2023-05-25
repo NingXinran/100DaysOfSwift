@@ -71,9 +71,10 @@ class ViewController: UITableViewController {
   }
 
   func search(input: String) {
+    let input = input.lowercased()
     var temp = [Petition]()
     for petition in petitions {
-      if petition.title.contains(input) || petition.body.contains(input) {
+      if petition.title.lowercased().contains(input) || petition.body.lowercased().contains(input) {
         temp.append(petition)
       }
     }
