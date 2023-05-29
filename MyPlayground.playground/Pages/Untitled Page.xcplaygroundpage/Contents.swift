@@ -1,8 +1,15 @@
 import UIKit
 
 
-class House {
-  var ownerDetails: (() -> Void)?
-  
-}
+var str = "hello"
+var ltrs = str.split(separator: "")
+
+var ltr = ltrs[0]
+
+ltr == "j"
+
+print(type(of: ltr))
+
+ltrs[0] = "j"
+ltrs
 
