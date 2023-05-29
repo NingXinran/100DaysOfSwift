@@ -139,7 +139,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
-    loadLevel()
+    performSelector(inBackground: #selector(loadLevel), with: nil)
   }
 
   @objc func letterTapped(_ sender: UIButton) {
@@ -188,7 +188,7 @@ class ViewController: UIViewController {
     activatedButtons.removeAll()
   }
 
-  func loadLevel() {
+  @objc func loadLevel() {
     // Properties that are dynamic wrt level
     correct = 0  // reset
     var cluesString = ""
@@ -216,15 +216,19 @@ class ViewController: UIViewController {
       }
     }
 
-    cluesLabel.text = cluesString.trimmingCharacters(in: .whitespacesAndNewlines)  // remove the last line break
-    answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
+    DispatchQueue.main.async{ [weak self] in
+      self?.cluesLabel.text = cluesString.trimmingCharacters(in: .whitespacesAndNewlines)  // remove the last line break
+      self?.answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
 
-    letterButtons.shuffle()
-    if letterButtons.count == letterBits.count {
-      for i in 0..<letterButtons.count {
-        letterButtons[i].setTitle(letterBits[i], for: .normal)
+      self?.letterButtons.shuffle()
+      if self?.letterButtons.count == letterBits.count {
+        guard let numLetterButtons = self?.letterButtons.count else { return }
+        for i in 0..<numLetterButtons {
+          self?.letterButtons[i].setTitle(letterBits[i], for: .normal)
+        }
       }
     }
+
   }
 
   func levelUp(action: UIAlertAction) {  // called from UI Alert action
