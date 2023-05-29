@@ -74,14 +74,17 @@ class ViewController: UITableViewController {
     ac.addTextField()
     let handleFilter = UIAlertAction(title: "Enter", style: .default) { [weak self, weak ac] _ in
       guard let input = ac?.textFields?[0].text else { return }
-      self?.search(input: input)
+      DispatchQueue.global().async {
+        print("in background thread")
+        self?.search(input: input)
+      }
     }
 
     ac.addAction(handleFilter)
     present(ac, animated: true)
   }
 
-  func search(input: String) {
+  @objc func search(input: String) {
     let input = input.lowercased()
     var temp = [Petition]()
     for petition in petitions {
@@ -90,7 +93,10 @@ class ViewController: UITableViewController {
       }
     }
     filteredPetitions = temp
-    tableView.reloadData()
+    DispatchQueue.main.async { [ weak self ] in
+      print("in main thread")
+      self?.tableView.reloadData()
+    }
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
