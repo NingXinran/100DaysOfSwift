@@ -18,24 +18,31 @@ class ViewController: UITableViewController {
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Credits", style: .plain, target: self, action: #selector(showCredits))
     navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(filterPetitions))
 
-    // Download and parse data
     let urlString: String
     if navigationController?.tabBarItem.tag == 0 {
       urlString = "https://www.hackingwithswift.com/samples/petitions-1.json"
     } else {
       urlString = "https://www.hackingwithswift.com/samples/petitions-2.json"  // cached copy
     }
+
+    performSelector(inBackground: #selector(fetchJSON), with: urlString)
+  }
+
+  @objc func fetchJSON(urlString: String) {
+    // Download and parse data
     if let url = URL(string: urlString) {  // url string -> URL object (safely)
       // NOTE: synchronous fetch right now
       if let data = try? Data(contentsOf: url) {  //  URL object -> Data object (fetch contents, safely)
-        parse(json: data)
+        parse(json: data)  // implicit capture of self
         return
       }
     }
+    performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false)
     showError()
+
   }
 
-  func showError(){
+  @objc func showError(){
     let ac = UIAlertController(title: "Loading error",
                                message: "There was a problem loading the feed; please check your connection and try again.",
                                preferredStyle: .alert)
@@ -48,7 +55,11 @@ class ViewController: UITableViewController {
     if let jsonPetitions = try? decoder.decode(Petitions.self, from: json) {  // convert to a petitions object
       petitions = jsonPetitions.results  // assign results array into petitions variable
       filteredPetitions = jsonPetitions.results
-      tableView.reloadData()
+      // push work back to main queue
+      DispatchQueue.main.async { [weak self] in
+        self?.tableView.reloadData()
+      }
+
     }
   }
 
